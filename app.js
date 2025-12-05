@@ -46,6 +46,7 @@ mongoose.connect(dbUrl)
   crypto: {
     secret : process.env.SECRET || "fallbacksecret123",
   },
+  collectionName: "sessions", 
   touchAfter: 24 * 3600, 
 })
 
