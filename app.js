@@ -44,7 +44,7 @@ mongoose.connect(dbUrl)
   const store = MongoStore.create({
   mongoUrl : dbUrl,
   crypto: {
-    secret : process.env.SECRET,
+    secret : process.env.SECRET || "fallbacksecret123",
   },
   touchAfter: 24 * 3600, 
 })
