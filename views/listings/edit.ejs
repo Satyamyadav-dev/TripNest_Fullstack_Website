@@ -1,0 +1,80 @@
+<% layout("layouts/boilerplate") %>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <h3 class="card-title text-center mb-4">Update Your Listing</h3>
+
+                        <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate
+                            class="needs-validation" enctype="multipart/form-data">
+
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="listing[title]"
+                                    value="<%= listing.title %>" required>
+                                <div class="valid-feedback">
+                                    title looks good!
+
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="listing[description]" rows="3"
+                                    required><%= listing.description %></textarea>
+                                <div class="invalid-feedback">
+                                    Please Enter Description.
+                                </div>
+                            </div>
+
+                            <div class="mb-3" >
+                                <p>original Image</p>
+                                <img src="<%= originalImageUrl %>" alt="original image">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Upload New Image</label>
+                               <input type="file" name="listing[image]" class="form-control">
+                                    
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price (₹)</label>
+                                <input type="number" class="form-control" id="price" name="listing[price]"
+                                    value="<%= listing.price %>" required>
+                                <div class="invalid-feedback">
+                                    Please Enter price.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="location" name="listing[location]"
+                                    value="<%= listing.location %>" required>
+                                <div class="invalid-feedback">
+                                    Please Enter location.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="country" class="form-label">Country</label>
+                                <input type="text" class="form-control" id="country" name="listing[country]"
+                                    value="<%= listing.country %>" required>
+                                <div class="invalid-feedback">
+                                    Please Enter country.
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-dark edit-btn">Update Listing</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/script.js"></script>

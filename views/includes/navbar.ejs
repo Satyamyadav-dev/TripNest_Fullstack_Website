@@ -1,0 +1,84 @@
+<style>
+    .btn-search{
+        background-color:  #fe424d;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        border-radius: 25px;
+        padding: 0.5rem 1.5rem;
+        margin-right: 25rem;
+    }
+    .btn-search i{
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+    .btn-search:hover{
+        background-color:  #fe424d;
+        color: #fff;
+    }
+    .search-input{
+        border-radius: 25px;
+        padding: 0.5rem 3rem;
+    }
+</style>
+
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+    <div class="container-fluid">
+
+        <!-- Brand -->
+        <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+
+        <!-- Toggle Button (Mobile Only) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- COLLAPSE MENU (Mobile) -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <!-- MOBILE SEARCH BAR -->
+            <div class="d-md-none w-100 mt-3">
+                <form class="d-flex flex-column" role="search">
+                    <input class="form-control mb-2 search-input" 
+                           type="search" placeholder="Search Destinations">
+                    <button class="btn btn-search" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i> Search
+                    </button>
+                </form>
+            </div>
+
+            <!-- MOBILE LOGIN/SIGNUP -->
+            <div class="d-md-none mt-3">
+                <% if (!currUser) { %>
+                    <a class="nav-link" href="/signup"><b>Signup</b></a>
+                    <a class="nav-link" href="/login"><b>Login</b></a>
+                <% } else { %>
+                    <a class="nav-link" href="/logout"><b>Logout</b></a>
+                <% } %>
+            </div>
+
+            <!-- DESKTOP SECTION -->
+            <div class="navbar-nav ms-auto d-none d-md-flex">
+
+                <!-- Desktop Search -->
+                <form class="d-flex me-3" role="search">
+                    <input class="form-control me-2 search-input" type="search"
+                        placeholder="Search Destinations">
+                    <button class="btn btn-search" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i> Search
+                    </button>
+                </form>
+
+                <!-- Desktop Login/Signup -->
+                <% if (!currUser) { %>
+                    <a class="nav-link" href="/signup"><b>Signup</b></a>
+                    <a class="nav-link" href="/login"><b>Login</b></a>
+                <% } else { %>
+                    <a class="nav-link" href="/logout"><b>Logout</b></a>
+                <% } %>
+
+            </div>
+        </div>
+
+    </div>
+</nav>
