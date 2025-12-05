@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, "public")))
 
 const dbUrl = process.env.ATLASDB_URL;
 
-// COPY THIS EXACT CONNECTION PATTERN
+// ✅ Changed to match working code pattern
 async function main() {
     await mongoose.connect(dbUrl);
 }
@@ -42,25 +42,25 @@ main()
     console.log(err);
 });
 
-// COPY THIS EXACT SESSION STORE CONFIGURATION
+// ✅ Changed to match working code
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
-        secret: process.env.SECRET  // REMOVE THE FALLBACK
+        secret: process.env.SECRET
     },
-    touchAfter: 2 * 24 * 3600,  // COPY EXACT VALUE
+    touchAfter: 2 * 24 * 3600,
 });
 
 store.on('error', (err) => {
     console.log('Error in MONGO SESSION STORE ', err);
 });
 
-// COPY THIS EXACT SESSION OPTIONS
+// ✅ Changed to match working code
 const sessionOptions = {
     store,
-    secret: process.env.SECRET,  // REMOVE FALLBACK
+    secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: true,  // CHANGE TO true
+    saveUninitialized: true,  // ✅ Changed from false to true
     cookie: {
         expires: Date.now() + 1000 * 60 * 60 * 24 * 3,
         maxAge: 1000 * 60 * 60 * 24 * 3,
@@ -73,7 +73,8 @@ app.use(flash())
 
 app.use(passport.initialize())
 app.use(passport.session())
-// COPY THIS PASSPORT CONFIGURATION
+
+// ✅ Changed to match working code
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
@@ -85,23 +86,25 @@ app.use((req, res, next) =>{
   next();
 })
 
-// COPY THESE EXACT ROUTES
-app.get("/",(req,res) => {
+// ✅ Added root route to match working code
+app.get("/", (req, res) => {
     res.redirect("/listings");
 });
+
+// ✅ Your original routes kept
 app.use('/listings', listingsRouter)
 app.use('/listings/:id/reviews', reviewRouter)
 app.use('/', userRouter)
 
-// COPY THESE EXACT ERROR HANDLERS
-app.use((req,res,next) => {
+// ✅ Changed error handlers to match working code
+app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found !"));
 });
 
-app.use((err,req,res,next) => {
+app.use((err, req, res, next) => {
     let {statusCode = 500, message = "Something Went Wrong"} = err;
-    res.status(statusCode).render("error.ejs", {err});
-})
+    res.status(statusCode).render('listings/error.ejs', { err }); // ✅ Your error.ejs path
+});
 
 const port = process.env.PORT || 8080;
 
