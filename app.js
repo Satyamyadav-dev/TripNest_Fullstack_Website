@@ -91,7 +91,8 @@ main()
     app.use('/listings/:id/reviews', reviewRouter)
     app.use('/', userRouter)
 
-    app.all('*', (req, res, next) => {
+    // ✅ Use regex instead of '*' for compatibility
+    app.use((req, res, next) => {
         next(new ExpressError(404, "Page Not Found !"));
     });
 
