@@ -65,6 +65,9 @@ const sessionOptions = {
     },
 };
 
+console.log("Connected to DB:", dbUrl);
+
+
 app.use(session(sessionOptions))
 app.use(flash())
 
