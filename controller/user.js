@@ -10,17 +10,9 @@ module.exports.signup = async(req, res, next) => {
     const newUser = new User({ email, username });
     const registeredUser = await User.register(newUser, password);
     
-    req.login(registeredUser, (err) => {
-      if(err){
-        req.flash("error", "Auto-login failed. Please login manually.");
-        res.redirect("/login");
-        return;
-      }
-      
-      req.flash('success', "Welcome to Wanderlust!");
-      let redirectUrl = res.locals.redirectUrl || "/listings";
-      res.redirect(redirectUrl);
-    });
+    // ✅ SIMPLE: No req.login() - matches working project
+    req.flash('success', "Welcome to Wanderlust!");
+    res.redirect("/listings");
     
   } catch (e) {
     req.flash("error", e.message);
