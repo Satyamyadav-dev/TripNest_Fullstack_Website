@@ -1,9 +1,9 @@
 <% layout("layouts/boilerplate") %>
-<script>
-    const mapToken  = "<%= process.env.MAP_TOKEN %>";
-    const listing = <%- JSON.stringify(listing) %>;
-   
-</script>
+    <script>
+        const mapToken = "<%= process.env.MAP_TOKEN %>";
+        const listing = <% - JSON.stringify(listing) %>;
+
+    </script>
 
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -120,10 +120,10 @@
                         </div>
                         <% } %>
         </div>
-        <div class="col-6 offset-2 mb-3">
+        <div class="col-12 col-md-8 mx-auto mb-3 mapsection">
             <h3>Where you'll be</h3>
-            <div id="map"></div>
+            <div id="map" class="w-100" style="height: 300px;"></div>
         </div>
-    </div>
 
-    <script src="/js/map.js" ></script>
+
+        <script src="/js/map.js"></script>
