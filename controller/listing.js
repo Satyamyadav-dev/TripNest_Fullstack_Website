@@ -43,6 +43,12 @@ module.exports.showRoutes = async (req, res) => {
 
 module.exports.createListings = async (req, res, next) => {
   try {
+    // ✅ ADDED: Check if file exists
+    if (!req.file) {
+      req.flash("error", "Image is required");
+      return res.redirect("/listings/new");
+    }
+    
     let response = await geocodingClient.forwardGeocode({
       query: req.body.listing.location,
       limit: 1

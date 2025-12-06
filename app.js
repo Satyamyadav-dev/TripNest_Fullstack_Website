@@ -29,7 +29,6 @@ app.use(express.static(path.join(__dirname, "public")))
 
 const dbUrl = process.env.ATLASDB_URL;
 
-// ✅ Changed to match working code pattern
 async function main() {
     await mongoose.connect(dbUrl);
 }
@@ -42,7 +41,6 @@ main()
     console.log(err);
 });
 
-// ✅ Changed to match working code
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
@@ -55,12 +53,11 @@ store.on('error', (err) => {
     console.log('Error in MONGO SESSION STORE ', err);
 });
 
-// ✅ Changed to match working code
 const sessionOptions = {
     store,
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: true,  // ✅ Changed from false to true
+    saveUninitialized: true,
     cookie: {
         expires: Date.now() + 1000 * 60 * 60 * 24 * 3,
         maxAge: 1000 * 60 * 60 * 24 * 3,
@@ -74,7 +71,6 @@ app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 
-// ✅ Changed to match working code
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
@@ -86,27 +82,58 @@ app.use((req, res, next) =>{
   next();
 })
 
-// ✅ Added root route to match working code
+// ✅ DEBUG MIDDLEWARE STARTS HERE
+app.use((req, res, next) => {
+  console.log(`=== ${req.method} ${req.originalUrl} ===`);
+  next();
+});
+
+// Prevent multiple responses
+app.use((req, res, next) => {
+  let responseSent = false;
+  
+  const originalRender = res.render;
+  res.render = function(...args) {
+    if (responseSent) {
+      console.error('🚨 Multiple render attempt prevented');
+      return;
+    }
+    responseSent = true;
+    console.log(`📄 Rendering: ${args[0]}`);
+    return originalRender.apply(this, args);
+  };
+  
+  const originalRedirect = res.redirect;
+  res.redirect = function(...args) {
+    if (responseSent) {
+      console.error('🚨 Multiple redirect attempt prevented');
+      return;
+    }
+    responseSent = true;
+    console.log(`🔀 Redirecting to: ${args[0]}`);
+    return originalRedirect.apply(this, args);
+  };
+  
+  next();
+});
+// ✅ DEBUG MIDDLEWARE ENDS HERE
+
 app.get("/", (req, res) => {
     res.redirect("/listings");
 });
 
-// ✅ Your original routes kept
 app.use('/listings', listingsRouter)
 app.use('/listings/:id/reviews', reviewRouter)
 app.use('/', userRouter)
 
-// ✅ Changed error handlers to match working code
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found !"));
 });
 
 app.use((err, req, res, next) => {
     let {statusCode = 500, message = "Something Went Wrong"} = err;
-    res.status(statusCode).render('listings/error.ejs', { err }); // ✅ Your error.ejs path
+    res.status(statusCode).render('listings/error.ejs', { err });
 });
-
-
 
 const port = process.env.PORT || 8080;
 
