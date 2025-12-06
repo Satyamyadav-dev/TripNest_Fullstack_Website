@@ -1,8 +1,7 @@
 <% layout("layouts/boilerplate") %>
     <script>
-        const mapToken = "<%= process.env.MAP_TOKEN %>";
+        const mapToken = "<%= MAP_TOKEN %>";
         const listing = <%- JSON.stringify(listing) %>;
-
     </script>
 
     <div class="container py-5">
@@ -111,10 +110,12 @@
                                             <%= review.comment %>
                                         </p>
                                     </div>
+                                    <% if(currUser && review.author._id.equals(currUser._id)) { %>
                                     <form class="mb-3" method="post"
                                         action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE">
                                         <button class="btn btn-dark ">Delete</button>
                                     </form>
+                                    <% } %>
                                 </div>
                                 <% } %>
                         </div>
