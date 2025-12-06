@@ -67,7 +67,6 @@ const sessionOptions = {
 
 console.log("Connected to DB:", dbUrl);
 
-
 app.use(session(sessionOptions))
 app.use(flash())
 
@@ -85,25 +84,45 @@ app.use((req, res, next) =>{
   next();
 })
 
+// ✅ FIXED: Added return statement
 app.get("/", (req, res) => {
-    res.redirect("/listings");
+    return res.redirect("/listings");
 });
 
 app.use('/listings', listingsRouter)
 app.use('/listings/:id/reviews', reviewRouter)
 app.use('/', userRouter)
 
-app.use((req, res, next) => {
+// ✅ FIXED: Changed to app.all('*') for catch-all
+app.all('*', (req, res, next) => {
     next(new ExpressError(404, "Page Not Found !"));
 });
 
+// ✅ FIXED: Improved error handler with headersSent check
 app.use((err, req, res, next) => {
+    // Prevent double response if headers already sent
+    if (res.headersSent) {
+        console.error('Headers already sent, delegating to default error handler');
+        return next(err);
+    }
+    
     let {statusCode = 500, message = "Something Went Wrong"} = err;
+    
+    // Log error details for debugging
+    console.error('Error occurred:', {
+        statusCode,
+        message: err.message,
+        stack: err.stack,
+        url: req.originalUrl,
+        method: req.method
+    });
+    
+    // Send error response
     res.status(statusCode).render('listings/error.ejs', { err });
 });
 
 const port = process.env.PORT || 8080;
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log("🚀 Server is running on port", port);
 });

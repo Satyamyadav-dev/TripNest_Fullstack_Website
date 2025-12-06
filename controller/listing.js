@@ -6,7 +6,7 @@ const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 module.exports.index = async (req, res, next) => {
   try {
     let allListings = await Listing.find({});
-    res.render('listings/index.ejs', {
+    return res.render('listings/index.ejs', {
       allListings,
       MAP_TOKEN: process.env.MAP_TOKEN
     });
@@ -17,7 +17,7 @@ module.exports.index = async (req, res, next) => {
 };
 
 module.exports.newFormRender = (req, res) => {
-  res.render('listings/new.ejs');
+  return res.render('listings/new.ejs');
 };
 
 module.exports.showRoutes = async (req, res, next) => {
@@ -35,7 +35,10 @@ module.exports.showRoutes = async (req, res, next) => {
       return res.redirect("/listings");
     }
 
-    res.render('listings/show.ejs', { listing, MAP_TOKEN: process.env.MAP_TOKEN });
+    return res.render('listings/show.ejs', { 
+      listing, 
+      MAP_TOKEN: process.env.MAP_TOKEN 
+    });
 
   } catch (err) {
     req.flash("error", "Failed to load listing");
@@ -70,7 +73,7 @@ module.exports.createListings = async (req, res, next) => {
 
     await newListing.save();
     req.flash('success', "New listing created successfully!");
-    res.redirect('/listings');
+    return res.redirect('/listings');
 
   } catch (err) {
     req.flash("error", err.message);
@@ -89,7 +92,7 @@ module.exports.renderEditForm = async (req, res, next) => {
     }
 
     let originalImageUrl = listing.image.url.replace("/upload", "/upload/w_250,c_fill");
-    res.render('listings/edit.ejs', { listing, originalImageUrl });
+    return res.render('listings/edit.ejs', { listing, originalImageUrl });
 
   } catch (err) {
     req.flash("error", "Failed to load listing for editing");
@@ -113,7 +116,7 @@ module.exports.updateListing = async (req, res, next) => {
     }
 
     req.flash('success', "Listing updated!");
-    res.redirect(`/listings/${id}`);
+    return res.redirect(`/listings/${id}`);
 
   } catch (err) {
     req.flash("error", "Failed to update listing");
@@ -132,7 +135,7 @@ module.exports.deleteListing = async (req, res, next) => {
     }
 
     req.flash('success', "Listing deleted!");
-    res.redirect('/listings');
+    return res.redirect('/listings');
 
   } catch (err) {
     req.flash("error", "Failed to delete listing");
