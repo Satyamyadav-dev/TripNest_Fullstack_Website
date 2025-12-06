@@ -82,42 +82,6 @@ app.use((req, res, next) =>{
   next();
 })
 
-// ✅ DEBUG MIDDLEWARE STARTS HERE
-app.use((req, res, next) => {
-  console.log(`=== ${req.method} ${req.originalUrl} ===`);
-  next();
-});
-
-// Prevent multiple responses
-app.use((req, res, next) => {
-  let responseSent = false;
-  
-  const originalRender = res.render;
-  res.render = function(...args) {
-    if (responseSent) {
-      console.error('🚨 Multiple render attempt prevented');
-      return;
-    }
-    responseSent = true;
-    console.log(`📄 Rendering: ${args[0]}`);
-    return originalRender.apply(this, args);
-  };
-  
-  const originalRedirect = res.redirect;
-  res.redirect = function(...args) {
-    if (responseSent) {
-      console.error('🚨 Multiple redirect attempt prevented');
-      return;
-    }
-    responseSent = true;
-    console.log(`🔀 Redirecting to: ${args[0]}`);
-    return originalRedirect.apply(this, args);
-  };
-  
-  next();
-});
-// ✅ DEBUG MIDDLEWARE ENDS HERE
-
 app.get("/", (req, res) => {
     res.redirect("/listings");
 });
