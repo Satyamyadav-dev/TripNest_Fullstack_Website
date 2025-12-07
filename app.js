@@ -96,7 +96,8 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
     let {statusCode = 500, message = "Something Went Wrong"} = err;
-    res.status(statusCode).render('listings/error.ejs', { err });
+  res.status(statusCode).render('error', { err });
+
 });
 
 const port = process.env.PORT || 8080;
