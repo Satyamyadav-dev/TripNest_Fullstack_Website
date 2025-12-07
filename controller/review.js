@@ -1,14 +1,14 @@
 const Listing = require("../models/listing.js")
 const Review = require("../models/review.js")
 
-module.exports.createReview = async (req, res, next) => {  // ✅ Add 'next'
+module.exports.createReview = async (req, res, next) => {  //  Add 'next'
   try {
     const { id } = req.params;
     const listing = await Listing.findById(id);
     
     if (!listing) {
       req.flash("error", "Listing not found");
-      return res.redirect("/listings");  // ✅ Add return
+      return res.redirect("/listings");  //  Add return
     }
     
     const newReview = new Review(req.body.review);
@@ -19,7 +19,7 @@ module.exports.createReview = async (req, res, next) => {  // ✅ Add 'next'
     await listing.save();
     
     req.flash('success', "New review created!");
-    return res.redirect(`/listings/${id}`);  // ✅ Add return
+    return res.redirect(`/listings/${id}`);  //  Add return
     
   } catch (err) {
     req.flash("error", "Failed to create review");

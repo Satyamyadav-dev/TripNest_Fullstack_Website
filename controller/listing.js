@@ -46,7 +46,7 @@ module.exports.showRoutes = async (req, res, next) => {
   }
 };
 
-module.exports.createListings = async (req, res, next) => {
+module.exports.createListings = async (req, res) => {
   try {
     if (!req.file) {
       req.flash("error", "Image is required");
@@ -77,9 +77,10 @@ module.exports.createListings = async (req, res, next) => {
 
   } catch (err) {
     req.flash("error", err.message);
-    return next(err);
+    return res.redirect("/listings/new");  // 🚀 FIX: Never call next(err) here
   }
 };
+
 
 module.exports.renderEditForm = async (req, res, next) => {
   try {
