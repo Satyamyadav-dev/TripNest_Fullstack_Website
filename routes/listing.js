@@ -1,61 +1,51 @@
-const express = require('express')
-const router = express.Router()
-const wrapAsync = require('../utils/wrapAsync.js')
-const ExpressError = require('../utils/ExpressError.js')
-const { listingSchema, reviewSchema } = require('../schema.js')
-// const listings = require('../routes/listing.js')
-const Listing = require('../models/listing.js')
-const { isLoggedIn, isOwner, validateListing } = require('../middleware.js')
-const listingController = require("../controller/listing.js")
+// routes/listing.js
 
-const multer = require('multer')
-const { storage } = require("../cloudConfig.js")
-const upload = multer({ storage })
+const express = require('express');
+const router = express.Router();
+const wrapAsync = require('../utils/wrapAsync.js');
+const { listingSchema, reviewSchema } = require('../schema.js');
+const Listing = require('../models/listing.js');
+const { isLoggedIn, isOwner, validateListing } = require('../middleware.js');
+const listingController = require("../controller/listing.js");
 
+const multer = require('multer');
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
-
-
-// index route
+// INDEX + CREATE
 router.route("/")
   .get(wrapAsync(listingController.index))
-  .post(validateListing, isLoggedIn,
-    upload.single('listing[image]'),  //image save to cloudinary
-    wrapAsync(listingController.createListings)
+  .post(
+    isLoggedIn,
+    validateListing,                     // ✔ FIXED: placed BEFORE multer
+    upload.single('listing[image]'),
+    wrapAsync(listingController.createListing)
   );
 
-
-
-
-
-// new listing route
+// NEW
 router.get('/new', isLoggedIn, listingController.newFormRender);
-router.route("/:id")
-  // Show route
-  .get(wrapAsync(listingController.showRoutes))
 
-  // Update route
+// SHOW + UPDATE + DELETE
+router.route("/:id")
+  .get(wrapAsync(listingController.showRoutes))
   .put(
     isLoggedIn,
     isOwner,
+    validateListing,                     // ✔ FIXED: placed BEFORE multer
     upload.single('listing[image]'),
-    validateListing,
     wrapAsync(listingController.updateListing)
   )
-
-  // Delete route
   .delete(
     isLoggedIn,
     isOwner,
     wrapAsync(listingController.deleteListing)
   );
-//update route
 
-
-//edit route
+// EDIT
 router.get('/:id/edit',
   isLoggedIn,
   isOwner,
-  wrapAsync(listingController.renderEditForm))
-
+  wrapAsync(listingController.renderEditForm)
+);
 
 module.exports = router;

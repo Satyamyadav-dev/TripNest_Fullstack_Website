@@ -1,9 +1,11 @@
+// controller/listing.js
+
 const Listing = require("../models/listing.js");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
-module.exports.index = async (req, res, next) => {
+module.exports.index = async (req, res) => {
   try {
     let allListings = await Listing.find({});
     return res.render('listings/index.ejs', {
@@ -12,7 +14,7 @@ module.exports.index = async (req, res, next) => {
     });
   } catch (err) {
     req.flash("error", "Failed to load listings");
-    return next(err);
+    return res.redirect("/listings");
   }
 };
 
@@ -20,7 +22,7 @@ module.exports.newFormRender = (req, res) => {
   return res.render('listings/new.ejs');
 };
 
-module.exports.showRoutes = async (req, res, next) => {
+module.exports.showRoutes = async (req, res) => {
   try {
     let { id } = req.params;
     const listing = await Listing.findById(id)
@@ -42,11 +44,11 @@ module.exports.showRoutes = async (req, res, next) => {
 
   } catch (err) {
     req.flash("error", "Failed to load listing");
-    return next(err);
+    return res.redirect("/listings");
   }
 };
 
-module.exports.createListings = async (req, res) => {
+module.exports.createListing = async (req, res) => {
   try {
     if (!req.file) {
       req.flash("error", "Image is required");
@@ -77,12 +79,11 @@ module.exports.createListings = async (req, res) => {
 
   } catch (err) {
     req.flash("error", err.message);
-    return res.redirect("/listings/new");  // 🚀 FIX: Never call next(err) here
+    return res.redirect("/listings/new");
   }
 };
 
-
-module.exports.renderEditForm = async (req, res, next) => {
+module.exports.renderEditForm = async (req, res) => {
   try {
     let { id } = req.params;
     let listing = await Listing.findById(id);
@@ -97,11 +98,11 @@ module.exports.renderEditForm = async (req, res, next) => {
 
   } catch (err) {
     req.flash("error", "Failed to load listing for editing");
-    return next(err);
+    return res.redirect("/listings");
   }
 };
 
-module.exports.updateListing = async (req, res, next) => {
+module.exports.updateListing = async (req, res) => {
   try {
     let { id } = req.params;
     let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
@@ -121,11 +122,11 @@ module.exports.updateListing = async (req, res, next) => {
 
   } catch (err) {
     req.flash("error", "Failed to update listing");
-    return next(err);
+    return res.redirect("/listings");
   }
 };
 
-module.exports.deleteListing = async (req, res, next) => {
+module.exports.deleteListing = async (req, res) => {
   try {
     let { id } = req.params;
     const listing = await Listing.findByIdAndDelete(id);
@@ -140,6 +141,6 @@ module.exports.deleteListing = async (req, res, next) => {
 
   } catch (err) {
     req.flash("error", "Failed to delete listing");
-    return next(err);
+    return res.redirect("/listings");
   }
 };
