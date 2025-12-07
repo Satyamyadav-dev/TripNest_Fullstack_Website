@@ -69,13 +69,14 @@
                         <i class="fa-solid fa-magnifying-glass"></i> Search
                     </button>
                 </form>
-
+                
+                  <a class="nav-link" href="/listings/new">Airbnb Your home</a>
                 <!-- Desktop Login/Signup -->
                 <% if (!currUser) { %>
                     <a class="nav-link" href="/signup"><b>Signup</b></a>
                     <a class="nav-link" href="/login"><b>Login</b></a>
                 <% } else { %>
-                    <a class="nav-link" href="/listings/new">Airbnb Your home</a>
+                    
                     <a class="nav-link" href="/logout"><b>Logout</b></a>
                 <% } %>
 
