@@ -1,7 +1,7 @@
-const Listing = require("./models/listing.js")
-const Review = require("./models/review.js")
-const ExpressError = require('./utils/ExpressError.js')
-const { listingSchema, reviewSchema } = require('./schema.js')
+const Listing = require("./models/listing.js");
+const Review = require("./models/review.js");
+const ExpressError = require('./utils/ExpressError.js');
+const { listingSchema, reviewSchema } = require('./schema.js');
 
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
@@ -45,7 +45,7 @@ module.exports.validateListing = (req, res, next) => {
   const { error } = listingSchema.validate(req.body);
   if (error) {
     const msg = error.details.map(el => el.message).join(', ');
-    throw new ExpressError(400, msg);
+    return next(new ExpressError(400, msg));   // ✔ FIX
   }
   next();
 };
@@ -54,7 +54,7 @@ module.exports.validateReview = (req, res, next) => {
   const { error } = reviewSchema.validate(req.body);
   if (error) {
     const msg = error.details.map(el => el.message).join(', ');
-    throw new ExpressError(400, msg);
+    return next(new ExpressError(400, msg));   // ✔ FIX
   }
   next();
 };
