@@ -12,35 +12,24 @@ Tech Stack: Node.js · Express · MongoDB (Mongoose) · EJS · Passport · Cloud
 Key Features:
 
 • User signup/login with sessions  
-
 • CRUD listings with image uploads and geolocation  
-
 • Review system  
-
 • Owner-based edit/delete 
-
 • Flash messages & error handling
-
 • Server-side validation  
 
 💻 Project Structure (MVC)
 
 • Model: /models/ — Mongoose schemas for listings, reviews, users 
-
 • View: /views/ — EJS templates & layouts  
-
 • Controller: /controllers/ — route logic for listings, reviews, users  
 
 Other folders:
 
 • /routes/ — Express routers
-
 • /middleware/ — authentication & authorization  
-
 • /utils/ — helpers (validation, Cloudinary config, custom errors) 
-
 • /public/ — static assets
-
 • /init/ — seeding or setup scripts  
 
 app.js — main entry point and Express setup
