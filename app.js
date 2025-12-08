@@ -80,7 +80,7 @@ async function startServer() {
 
     const sessionOptions = {
         store: store || undefined,
-        secret: process.env.SECRET || "thisshouldbeabettersecret",
+        secret: process.env.SECRET || "mysupersecret123",
         resave: false,
         saveUninitialized: true,
         cookie: {
