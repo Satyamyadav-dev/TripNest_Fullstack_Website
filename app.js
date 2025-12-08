@@ -62,7 +62,7 @@ async function startServer() {
         store = MongoStore.create({
             ...storeConfig,
             crypto: {
-                secret: process.env.SECRET || "thisshouldbeabettersecret",
+                secret: process.env.SECRET || "mysupersecret123",
             },
             touchAfter: 2 * 24 * 3600,
         });
