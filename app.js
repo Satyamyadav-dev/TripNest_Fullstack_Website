@@ -1,5 +1,5 @@
-if(process.env.NODE_ENV != "production"){
-  require('dotenv').config()
+if (process.env.NODE_ENV != "production") {
+    require('dotenv').config()
 }
 
 const express = require('express');
@@ -23,13 +23,13 @@ const userRouter = require('./routes/user.js')
 const dbUrl = process.env.ATLASDB_URL || process.env.ATLAS_DB_URL;
 
 main()
-.then(() => {
-    console.log("connected to db");
-    startServer();
-})
-.catch((err) => {
-    console.log(err);
-});
+    .then(() => {
+        console.log("connected to db");
+        startServer();
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 async function main() {
     await mongoose.connect(dbUrl);
@@ -56,19 +56,14 @@ async function startServer() {
     } else {
         console.error('No Mongo client or mongoUrl available for session store.');
     }
-
     let store;
     try {
         store = MongoStore.create({
             ...storeConfig,
-            crypto: {
-                secret: process.env.SECRET || "mysupersecret123",
-            },
             touchAfter: 2 * 24 * 3600,
         });
     } catch (e) {
         console.error('Failed to create MongoStore:', e);
-        // Do not crash the whole server — continue without persistent session store.
         store = null;
     }
 
@@ -77,6 +72,7 @@ async function startServer() {
             console.log('Error in MONGO SESSION STORE ', err);
         });
     }
+
 
     const sessionOptions = {
         store: store || undefined,
@@ -100,7 +96,7 @@ async function startServer() {
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
 
-    app.use((req, res, next) =>{
+    app.use((req, res, next) => {
         res.locals.success = req.flash("success");
         res.locals.error = req.flash("error");
         res.locals.currUser = req.user;
@@ -123,13 +119,14 @@ async function startServer() {
         if (res.headersSent) {
             return next(err);
         }
-        let {statusCode = 500, message = "Something Went Wrong"} = err;
+        let { statusCode = 500, message = "Something Went Wrong" } = err;
         console.error(err);
         res.status(statusCode).render('error', { err });
     });
 
     const port = process.env.PORT || 8080;
     app.listen(port, () => {
-        console.log('Server is listening to port', port);
+        console.log("Server is listening on port", port);
     });
+
 }
