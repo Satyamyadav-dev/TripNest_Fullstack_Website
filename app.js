@@ -43,25 +43,43 @@ app.engine('ejs', ejsMate)
 app.use(express.static(path.join(__dirname, "public")))
 
 async function startServer() {
-    // Create a MongoStore using the already-established mongoose client
-    // to avoid connect-mongo attempting its own connection before mongoose is ready.
-    const client = mongoose.connection.getClient && mongoose.connection.getClient();
-    const storeOptions = client ? { client } : { mongoUrl: dbUrl };
+    // Create a MongoStore using the already-established mongoose client when possible.
+    // Prefer passing a `clientPromise` (a Promise resolving to the native MongoClient)
+    // which connect-mongo will consume. Fall back to `mongoUrl` if no client is available.
+    const client = (mongoose.connection.getClient && mongoose.connection.getClient()) || null;
 
-    const store = MongoStore.create({
-        ...storeOptions,
-        crypto: {
-            secret: process.env.SECRET || "thisshouldbeabettersecret",
-        },
-        touchAfter: 2 * 24 * 3600,
-    });
+    let storeConfig = {};
+    if (client) {
+        storeConfig.clientPromise = Promise.resolve(client);
+    } else if (dbUrl) {
+        storeConfig.mongoUrl = dbUrl;
+    } else {
+        console.error('No Mongo client or mongoUrl available for session store.');
+    }
 
-    store.on('error', (err) => {
-        console.log('Error in MONGO SESSION STORE ', err);
-    });
+    let store;
+    try {
+        store = MongoStore.create({
+            ...storeConfig,
+            crypto: {
+                secret: process.env.SECRET || "thisshouldbeabettersecret",
+            },
+            touchAfter: 2 * 24 * 3600,
+        });
+    } catch (e) {
+        console.error('Failed to create MongoStore:', e);
+        // Do not crash the whole server — continue without persistent session store.
+        store = null;
+    }
+
+    if (store && store.on) {
+        store.on('error', (err) => {
+            console.log('Error in MONGO SESSION STORE ', err);
+        });
+    }
 
     const sessionOptions = {
-        store,
+        store: store || undefined,
         secret: process.env.SECRET || "thisshouldbeabettersecret",
         resave: false,
         saveUninitialized: true,

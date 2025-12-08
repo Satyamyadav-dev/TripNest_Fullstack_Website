@@ -1,6 +1,6 @@
 <style>
-    .btn-search{
-        background-color:  #fe424d;
+    .btn-search {
+        background-color: #fe424d;
         color: #fff;
         display: flex;
         align-items: center;
@@ -8,15 +8,18 @@
         padding: 0.5rem 1.5rem;
         margin-right: 25rem;
     }
-    .btn-search i{
+
+    .btn-search i {
         margin-right: 0.5rem;
         font-size: 1rem;
     }
-    .btn-search:hover{
-        background-color:  #fe424d;
+
+    .btn-search:hover {
+        background-color: #fe424d;
         color: #fff;
     }
-    .search-input{
+
+    .search-input {
         border-radius: 25px;
         padding: 0.5rem 3rem;
     }
@@ -39,46 +42,47 @@
             <!-- MOBILE SEARCH BAR -->
             <div class="d-md-none w-100 mt-3">
                 <form class="d-flex flex-column" role="search">
-                    <input class="form-control mb-2 search-input" 
-                           type="search" placeholder="Search Destinations">
+                    <input class="form-control mb-2 search-input" type="search" placeholder="Search Destinations">
                     <button class="btn btn-search" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i> Search
                     </button>
                 </form>
             </div>
 
-            <!-- MOBILE LOGIN/SIGNUP -->
             <div class="d-md-none mt-3">
+
+                <a class="nav-link" href="/listings/new"><b>Airbnb Your home</b></a>
+
                 <% if (!currUser) { %>
                     <a class="nav-link" href="/signup"><b>Signup</b></a>
                     <a class="nav-link" href="/login"><b>Login</b></a>
-                <% } else { %>
-                    <a class="nav-link" href="/listings/new"><b>+ New Listing</b></a>
-                    <a class="nav-link" href="/logout"><b>Logout</b></a>
-                <% } %>
+                    <% } else { %>
+                        <a class="nav-link" href="/logout"><b>Logout</b></a>
+                        <% } %>
+
             </div>
+
 
             <!-- DESKTOP SECTION -->
             <div class="navbar-nav ms-auto d-none d-md-flex">
 
                 <!-- Desktop Search -->
                 <form class="d-flex me-3" role="search">
-                    <input class="form-control me-2 search-input" type="search"
-                        placeholder="Search Destinations">
+                    <input class="form-control me-2 search-input" type="search" placeholder="Search Destinations">
                     <button class="btn btn-search" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i> Search
                     </button>
                 </form>
-                
-                  <a class="nav-link" href="/listings/new">Airbnb Your home</a>
+
+                <a class="nav-link" href="/listings/new">Airbnb Your home</a>
                 <!-- Desktop Login/Signup -->
                 <% if (!currUser) { %>
                     <a class="nav-link" href="/signup"><b>Signup</b></a>
                     <a class="nav-link" href="/login"><b>Login</b></a>
-                <% } else { %>
-                    
-                    <a class="nav-link" href="/logout"><b>Logout</b></a>
-                <% } %>
+                    <% } else { %>
+
+                        <a class="nav-link" href="/logout"><b>Logout</b></a>
+                        <% } %>
 
             </div>
         </div>
